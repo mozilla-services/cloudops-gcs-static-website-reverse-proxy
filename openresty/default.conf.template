@@ -1,0 +1,30 @@
+server {
+    listen 80;
+
+    location = /__lbheartbeat__ {
+        access_log off;
+        return 200;
+    }
+
+    location / {
+        proxy_pass $GCS_BUCKET_URL;
+        header_filter_by_lua_block {
+            local headers = ngx.resp.get_headers()
+            local prefix = "x-goog-meta-"
+            local prefixlen = string.len(prefix)
+            for header, value in pairs(headers) do
+                if string.sub(header, 1, prefixlen)==prefix then
+                    newheader = string.sub(header, prefixlen+1)
+                    ngx.header[newheader] = value
+                    ngx.header[header] = nil
+                end
+            end
+            -- if ngx.header.location then
+            --     ngx.status = 302
+            -- end
+            -- if ngx.status == 403 then
+            --     ngx.status = 404
+            -- end
+        }
+    }
+}
