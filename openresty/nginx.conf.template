@@ -37,7 +37,7 @@ http {
     log_format main '$remote_addr - $remote_user [$time_local] '
                     '"$request" $status $body_bytes_sent '
                     '"$http_referer" "$http_user_agent" "$http_authorization';
-    access_log logs/access_log main;
+    access_log /usr/local/openresty/nginx/logs/access.log main;
 
     # See Move default writable paths to a dedicated directory (#119)
     # https://github.com/openresty/docker-openresty/issues/119
