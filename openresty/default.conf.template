@@ -21,12 +21,6 @@ server {
                     ngx.header[header] = nil
                 end
             end
-            -- if ngx.header.location then
-            --     ngx.status = 302
-            -- end
-            -- if ngx.status == 403 then
-            --     ngx.status = 404
-            -- end
         }
     }
 }
