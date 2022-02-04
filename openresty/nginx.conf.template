@@ -1,0 +1,59 @@
+#
+# This file is meant to be used with the OpenResty docker image, and it is
+# revised based on
+# https://github.com/openresty/docker-openresty/blob/adb01964c769abbb51743cadb518c716c4d138d0/nginx.conf
+#
+# One way to use this file is to mount it to /usr/local/openresty/nginx/conf/nginx.conf
+# and replace the original nginx.conf file in the docker image.
+#
+# Other OpenResty `.conf` files should be mounted to /etc/nginx/conf.d/
+# directory when running the OpenResty docker image.
+#
+# The default virtual server of the original OpenResty configuration is named
+# as /etc/nginx/conf.d/default.conf in the image (But we override it by mounting
+# the whole /etc/nginx/conf.d/ directory).
+#
+# See https://github.com/openresty/docker-openresty/blob/master/README.md#nginx-config-files
+#
+
+user nobody nogroup;
+pid /var/run/openresty/nginx.pid;
+
+pcre_jit on;
+
+worker_processes auto;
+worker_rlimit_nofile 65536;
+
+events {
+    # worker_processes * worker_connections should be less than or equal
+    # to worker_rlimit_nofile.
+    worker_connections 8192;
+}
+
+http {
+    include             mime.types;
+    default_type        application/octet-stream;
+
+    # See Move default writable paths to a dedicated directory (#119)
+    # https://github.com/openresty/docker-openresty/issues/119
+    client_body_temp_path /var/run/openresty/nginx-client-body;
+    fastcgi_temp_path     /var/run/openresty/nginx-fastcgi;
+    proxy_temp_path       /var/run/openresty/nginx-proxy;
+    scgi_temp_path        /var/run/openresty/nginx-scgi;
+    uwsgi_temp_path       /var/run/openresty/nginx-uwsgi;
+
+    gzip                on;
+    keepalive_timeout   65;
+    sendfile            on;
+    tcp_nodelay         on;
+    tcp_nopush          on;
+    types_hash_max_size 2048;
+
+    server_tokens off;
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+}
+
