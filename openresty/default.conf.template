@@ -7,9 +7,22 @@ server {
     }
 
     location / {
-        proxy_set_header Authorization $http_authorization;
-        proxy_http_version 1.1;
         proxy_pass $GCS_BUCKET_URL;
+
+        proxy_http_version 1.1;
+
+        #
+        # Hide a few GCS returned headers.
+        #
+        proxy_hide_header x-goog-generation;
+        proxy_hide_header x-goog-metageneration;
+        proxy_hide_header x-goog-stored-content-encoding;
+        proxy_hide_header x-goog-storage-class;
+        proxy_hide_header x-goog-hash;
+
+        #
+        # Remove the "x-goog-meta-" prefix from GCS returned headers.
+        #
         header_filter_by_lua_block {
             local headers = ngx.resp.get_headers()
             local prefix = "x-goog-meta-"
