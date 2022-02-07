@@ -26,7 +26,7 @@ server {
         header_filter_by_lua_block {
             local req_headers = ngx.req.get_headers()
             for k, v in pairs(req_headers) do
-                ngx.log(ngx.ERR, "Got header '"..k.."': "..toString(v)..";")
+                ngx.log(ngx.ERR, "Got header '"..k.."': "..tostring(v)..";")
             end
 
             local resp_headers = ngx.resp.get_headers()
