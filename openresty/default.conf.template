@@ -24,9 +24,11 @@ server {
         # Remove the "x-goog-meta-" prefix from GCS returned headers.
         #
         header_filter_by_lua_block {
-            local req_headers = ngx.req.get_headers()
-            for k, v in pairs(req_headers) do
-                ngx.log(ngx.ERR, "Got header '"..k.."': "..tostring(v)..";")
+            if os.getenv("LOG_REQUEST_HEADERS") then
+                local req_headers = ngx.req.get_headers()
+                for header, value in pairs(req_headers) do
+                    ngx.log(ngx.ERR, "Got request header '"..header.."': '"..tostring(value).."';")
+                end
             end
 
             local resp_headers = ngx.resp.get_headers()
@@ -37,6 +39,9 @@ server {
                     newheader = string.sub(header, prefixlen+1)
                     ngx.header[newheader] = value
                     ngx.header[header] = nil
+                end
+                if os.getenv("LOG_RESPONSE_HEADERS") then
+                    ngx.log(ngx.ERR, "Got response header '"..header.."': '"..tostring(value).."';")
                 end
             end
         }

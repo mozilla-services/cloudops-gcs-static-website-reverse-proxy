@@ -24,6 +24,10 @@ pcre_jit on;
 worker_processes auto;
 worker_rlimit_nofile 65536;
 
+# Peserve 2 env variables that are used by lua later.
+env LOG_REQUEST_HEADERS;
+env LOG_RESPONSE_HEADERS;
+
 events {
     # worker_processes * worker_connections should be less than or equal
     # to worker_rlimit_nofile.
