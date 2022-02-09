@@ -1,5 +1,6 @@
 server {
     listen 80;
+    server_name $WEBSITE_SERVER_NAMES;
 
     location = /__lbheartbeat__ {
         access_log off;
@@ -46,4 +47,12 @@ server {
             end
         }
     }
+}
+
+# Reject all requests that do not have a proper server name (e.g. access the
+# site via an IP address).
+server {
+    listen       80  default_server;
+    server_name  _;
+    return       444;
 }
