@@ -52,6 +52,16 @@ http {
     uwsgi_temp_path       /var/run/openresty/nginx-uwsgi;
 
     gzip                                on;
+    gzip_proxied                        any;
+    gzip_types
+        image/svg+xml
+        image/vnd.microsoft.icon
+        text/css
+        text/javascript
+        text/plain
+        text/xml;
+    gzip_vary                           on;
+
     keepalive_timeout                   65;
     sendfile                            on;
     server_names_hash_bucket_size       128;
