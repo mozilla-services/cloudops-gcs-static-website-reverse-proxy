@@ -41,7 +41,7 @@ Take the following steps to release a new tag.
    ```
 Note:
   * The build and push process is not automated because as of this writing, the
-    image is not frequently built and it's not worth the effort to set it up
+    image is not frequently built and it's not worth the effort to set that up
     (e.g. we would need a service account with proper permissions and we also
     need to manage its key file and etc.).
   * The major versions don't have EOL at this point, i.e. they're maintained
