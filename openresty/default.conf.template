@@ -2,11 +2,6 @@ server {
     listen 80;
     server_name $WEBSITE_SERVER_NAMES;
 
-    location = /__lbheartbeat__ {
-        access_log off;
-        return 200;
-    }
-
     location / {
         proxy_pass $GCS_BUCKET_URL;
 
@@ -54,5 +49,8 @@ server {
 server {
     listen       80  default_server;
     server_name  _;
-    return       444;
+
+    location / {
+        return 404 "No such a host.";
+    }
 }
